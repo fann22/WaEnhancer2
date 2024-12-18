@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.HashSet;
 
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedHelpers;
 
 public class FirstMessage {
