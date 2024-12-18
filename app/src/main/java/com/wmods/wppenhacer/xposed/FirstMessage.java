@@ -18,7 +18,7 @@ import de.robv.android.xposed.XposedHelpers;
 
 public class FirstMessage {
 
-    public static HashSet<HomeMenuItem> menuItems = new LinkedHashSet<>();
+    public static HashSet<ConversationMenuItem> menuItems = new LinkedHashSet<>();
 
     public FirstMessage(@NonNull ClassLoader classLoader, @NonNull XSharedPreferences preferences) {
         super(classLoader, preferences);
