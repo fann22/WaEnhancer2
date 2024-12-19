@@ -547,6 +547,7 @@ public class Others extends Feature {
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
+                    try {
                     var getViewConversationMethod = UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
                         var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
                         var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
@@ -564,6 +565,9 @@ public class Others extends Feature {
                             }
                         }
                     });
+                    } catch (Exception e) {
+                        XposedBridge.log(e.getMessage());
+                    }
                     return true; // Event ditangani
                 });
             }
