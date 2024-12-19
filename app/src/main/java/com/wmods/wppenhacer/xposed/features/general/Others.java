@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -547,12 +548,12 @@ public class Others extends Feature {
                             Method scrollTo = listView.getClass().getDeclaredMethod("setSelection", int.class);
                             scrollTo.setAccessible(true);
                             scrollTo.invoke(listView, 0);
-                            logDebug("LSPosed", "Scroll to top invoked successfully.");
+                            Log.d("LSPosed", "Scroll to top invoked successfully.");
                         } else {
-                            logDebug("LSPosed", "ListView is null. Cannot scroll.");
+                            Log.e("LSPosed", "ListView is null. Cannot scroll.");
                         }
                     } catch (Exception e) {
-                        logDebug("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
+                        Log.e("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
                     }
                     return true; // Event ditangani
                 });
