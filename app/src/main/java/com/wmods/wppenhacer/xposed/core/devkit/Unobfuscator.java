@@ -1779,7 +1779,7 @@ public class Unobfuscator {
                 var targetClass = classData.getInstance(loader);
                 methodData = targetClass.findMethod(
                     FindMethod.create().matcher(
-                        ClassMatcher.create().addUsingString(fnStr)
+                        MethodMatcher.create().addUsingString(fnStr)
                     )
                 ).singleOrNull();
             }
