@@ -12,7 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
 import android.view.View;
-import android.view.ViewGroup
+import android.view.ViewGroup;
 import android.util.Log;
 import android.os.Bundle;
 import android.widget.ListView;
