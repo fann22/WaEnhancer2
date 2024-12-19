@@ -539,10 +539,22 @@ public class Others extends Feature {
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    Object listView = XposedHelpers.getObjectField(activity, "listView");
-                    Method scrollTo = listView.getClass().getDeclaredMethod("setSelection", int.class);
-                    scrollTo.invoke(listView, 0);
-                    return true;
+                    try {
+                        // Ambil listView dari activity
+                        Object listView = XposedHelpers.getObjectField(activity, "listView");
+                        if (listView != null) {
+                            // Cari metode setSelection dan panggil
+                            Method scrollTo = listView.getClass().getDeclaredMethod("setSelection", int.class);
+                            scrollTo.setAccessible(true);
+                            scrollTo.invoke(listView, 0);
+                            logDebug("LSPosed", "Scroll to top invoked successfully.");
+                        } else {
+                            logDebug("LSPosed", "ListView is null. Cannot scroll.");
+                        }
+                    } catch (Exception e) {
+                        logDebug("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
+                    }
+                    return true; // Event ditangani
                 });
             }
         });
