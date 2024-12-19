@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.LayoutInflater;
 import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
@@ -545,23 +547,23 @@ public class Others extends Feature {
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    var view = UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
+                    var getViewConversationMethod = UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
                         var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
                         var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
                         if (method == null) throw new RuntimeException("GetViewConversation method not found");
-                        return XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                var view = (ViewGroup) param.getResult();
-                                return view;
-                            }
-                        });
+                        return method
                     });
-                    if (view != null) {
-                        XposedBridge.log("ViewGroup Result: " + view.toString());
-                    } else {
-                        XposedBridge.log("ViewGroup is null!");
-                    }
+                    XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            var view = (ViewGroup) param.getResult();
+                            if (view != null) {
+                                XposedBridge.log("ViewGroup Result: " + view.toString());
+                            } else {
+                                XposedBridge.log("ViewGroup is null!");
+                            }
+                        }
+                    });
                     return true; // Event ditangani
                 });
             }
