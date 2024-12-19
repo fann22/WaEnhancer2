@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
@@ -520,6 +521,23 @@ public class Others extends Feature {
                 if (item != null) {
                     item.setVisible(Objects.equals(filterChats, "1"));
                 }
+            }
+        });
+        XposedHelpers.findAndHookMethod("com.whatsapp.Conversation", classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                var menu = (Menu) param.args[0];
+                var activity = (Activity) param.thisObject;
+                var itemMenu = menu.add(0, 0, 9999, " " + activity.getString(ResId.string.app_name));
+                var iconDraw = DesignUtils.getDrawableByName("ic_settings");
+                iconDraw.setTint(0xff8696a0);
+                itemMenu.setIcon(iconDraw);
+                itemMenu.setOnMenuItemClickListener(item -> {
+                    Intent intent = activity.getPackageManager().getLaunchIntentForPackage(BuildConfig.APPLICATION_ID);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
+                    return true;
+                });
             }
         });
     }
