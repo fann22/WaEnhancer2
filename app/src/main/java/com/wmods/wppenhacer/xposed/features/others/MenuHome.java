@@ -26,6 +26,7 @@ import de.robv.android.xposed.XposedHelpers;
 public class MenuHome extends Feature {
 
     public static HashSet<HomeMenuItem> menuItems = new LinkedHashSet<>();
+    public static HashSet<HomeMenuItem> menuItems2 = new LinkedHashSet<>();
 
 
     public MenuHome(@NonNull ClassLoader classLoader, @NonNull XSharedPreferences preferences) {
@@ -51,6 +52,7 @@ public class MenuHome extends Feature {
 
         // open WAE
         menuItems.add(this::InsertOpenWae);
+        menuItems2.add(this::InsertOpenWae);
 
     }
 
@@ -201,6 +203,16 @@ public class MenuHome extends Feature {
                 var menu = (Menu) param.args[0];
                 var activity = (Activity) param.thisObject;
                 for (var menuItem : MenuHome.menuItems) {
+                    menuItem.addMenu(menu, activity);
+                }
+            }
+        });
+        XposedHelpers.findAndHookMethod("com.whatsapp.Conversation", classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                var menu = (Menu) param.args[0];
+                var activity = (Activity) param.thisObject;
+                for (var menuItem : MenuHome.menuItems2) {
                     menuItem.addMenu(menu, activity);
                 }
             }
