@@ -1777,14 +1777,14 @@ public class Unobfuscator {
             ).singleOrNull();
             if (classData != null) {
                 var targetClass = classData.getInstance(loader);
-                for (var method : targetClass.methods) {
-                    if (method.getName().contains(fnStr)) {
-                        methodData = method;
-                        break;
-                    }
-                }
+                methodData = targetClass.findMethod(
+                    FindMethod.create().matcher(
+                        ClassMatcher.create().addUsingString(fnStr)
+                    )
+                ).singleOrNull();
             }
-            if (classData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
+            if (classData.isEmpty() || methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
+            XposedBridge.log(methodData.toString());
             return methodData;
         });
     }
