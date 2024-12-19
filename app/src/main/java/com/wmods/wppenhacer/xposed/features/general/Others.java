@@ -553,7 +553,11 @@ public class Others extends Feature {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 var view = (ViewGroup) param.getResult();
-                                XposedBridge.log(view.toString());
+                                if (view != null) {
+                                    XposedBridge.log("ViewGroup Result: " + view.toString());
+                                } else {
+                                    XposedBridge.log("ViewGroup is null!");
+                                }
                             }
                         });
                     });
