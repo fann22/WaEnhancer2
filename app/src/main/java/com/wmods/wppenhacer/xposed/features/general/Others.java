@@ -545,7 +545,7 @@ public class Others extends Feature {
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
+                    var view = UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
                         var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
                         var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
                         if (method == null) throw new RuntimeException("GetViewConversation method not found");
@@ -553,13 +553,14 @@ public class Others extends Feature {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 var view = (ViewGroup) param.getResult();
-                                if (view != null) {
-                                    XposedBridge.log("ViewGroup Result: " + view.toString());
-                                } else {
-                                    XposedBridge.log("ViewGroup is null!");
-                                }
+                                return view;
                             }
                         });
+                        if (view != null) {
+                            XposedBridge.log("ViewGroup Result: " + view.toString());
+                        } else {
+                            XposedBridge.log("ViewGroup is null!");
+                        }
                     });
                     return true; // Event ditangani
                 });
