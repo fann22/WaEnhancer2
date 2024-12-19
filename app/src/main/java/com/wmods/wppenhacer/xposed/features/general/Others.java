@@ -546,18 +546,19 @@ public class Others extends Feature {
                     "onCreateOptionsMenu",
                     Menu.class,
                     new XC_MethodHook() {
-                        try {
-                            // Dapatkan field A02 yang merupakan ListView
-                            Object listView = XposedHelpers.getObjectField(activity, "A02");
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            var messageActivity = param.thisObject;
+
+                            // Dapatkan ListView dari field A02
+                            Object listView = XposedHelpers.getObjectField(messageActivity, "A02");
 
                             if (listView != null && listView instanceof ListView) {
-                                // Panggil metode setSelection untuk menggulir ke awal
+                                // Scroll ke awal menggunakan setSelection
                                 ((ListView) listView).setSelection(0);
                             } else {
-                                Log.e("LSPosed", "ListView (A02) not found or is not of type ListView!");
+                                Log.e("LSPosed", "ListView (A02) tidak ditemukan atau bukan tipe ListView!");
                             }
-                        } catch (Exception e) {
-                            Log.e("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
                         }
                     });
                     return true; // Event ditangani
