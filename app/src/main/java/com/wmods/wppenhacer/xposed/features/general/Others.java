@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
+import android.view.View;
 import android.util.Log;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -21,6 +22,7 @@ import com.wmods.wppenhacer.listeners.OnMultiClickListener;
 import com.wmods.wppenhacer.xposed.core.Feature;
 import com.wmods.wppenhacer.xposed.core.WppCore;
 import com.wmods.wppenhacer.xposed.core.devkit.Unobfuscator;
+import com.wmods.wppenhacer.xposed.core.devkit.UnobfuscatorCache;
 import com.wmods.wppenhacer.xposed.utils.AnimationUtil;
 import com.wmods.wppenhacer.xposed.utils.ReflectionUtils;
 import com.wmods.wppenhacer.BuildConfig;
@@ -532,60 +534,31 @@ public class Others extends Feature {
                 }
             }
         });
-        XposedHelpers.findAndHookMethod(
-    "com.whatsapp.Conversation",
-    classLoader,
-    "onCreateOptionsMenu",
-    Menu.class,
-    new XC_MethodHook() {
-        @Override
-        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-            var menu = (Menu) param.args[0];
-            var activity = (Activity) param.thisObject;
-
-            // Tambahkan item menu baru
-            var itemMenu = menu.add(0, 0, 1, "Go to the first message");
-
-            // Atur ikon untuk item menu
-            var iconDraw = DesignUtils.getDrawableByName("ic_settings");
-            iconDraw.setTint(0xff8696a0);
-            itemMenu.setIcon(iconDraw);
-
-            // Tambahkan listener klik pada item menu
-            itemMenu.setOnMenuItemClickListener(item -> {
-                try {
-                    // Hook ke MessageDetailsActivity
-                    XposedHelpers.findAndHookMethod(
-                        "com.whatsapp.conversation.conversationrow.message.MessageDetailsActivity",
-                        classLoader,
-                        "onCreate",
-                        Bundle.class,
-                        new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod("com.whatsapp.Conversation", classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+            @Override
+            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                var menu = (Menu) param.args[0];
+                var activity = (Activity) param.thisObject;
+                var itemMenu = menu.add(0, 0, 1, "Go to the first message");
+                var iconDraw = DesignUtils.getDrawableByName("ic_settings");
+                iconDraw.setTint(0xff8696a0);
+                itemMenu.setIcon(iconDraw);
+                itemMenu.setOnMenuItemClickListener(item -> {
+                    UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
+                        var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
+                        var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
+                        if (method == null) throw new RuntimeException("GetViewConversation method not found");
+                        XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                var messageActivity = param.thisObject;
-
-                                // Dapatkan ListView dari field A02
-                                Object listView = XposedHelpers.getObjectField(messageActivity, "A02");
-
-                                if (listView != null && listView instanceof ListView) {
-                                    // Scroll ke awal menggunakan setSelection
-                                    ((ListView) listView).setSelection(0);
-                                } else {
-                                    Log.e("LSPosed", "ListView (A02) tidak ditemukan atau bukan tipe ListView!");
-                                }
+                                logDebug(param.getResult());
                             }
-                        }
-                    );
-                } catch (Exception e) {
-                    Log.e("LSPosed", "Terjadi kesalahan saat scrolling ke atas: " + e.getMessage(), e);
-                }
-                return true; // Event ditangani
-            });
-        }
-    }
-);
-        
+                        });
+                    });
+                    return true; // Event ditangani
+                });
+            }
+        });
     }
 
     @NonNull
