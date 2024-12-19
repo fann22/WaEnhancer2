@@ -545,15 +545,19 @@ public class Others extends Feature {
                 var itemMenu = menu.add(0, 0, 1, "Go to the first message");
                 var iconDraw = DesignUtils.getDrawableByName("ic_settings");
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
-                    XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
-                        @Override
-                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                            var view = (ViewGroup) param.getResult();
-                            XposedBridge.log(view.toString());
-                            if (view == null) return;
-                        }
-                    });
+                    try {
+                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                        XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                var view = (ViewGroup) param.getResult();
+                                XposedBridge.log(view.toString());
+                                if (view == null) return;
+                            }
+                        });
+                    } catch (Exception e) {
+                        XposedBridge.log(e.getMessage());
+                    }
                     return true;
                 });
             }
