@@ -27,6 +27,7 @@ import com.wmods.wppenhacer.xposed.utils.DesignUtils;
 
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -34,6 +35,8 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 
+import de.robv.android.xposed.IXposedHookLoadPackage;
+import de.robv.android.xposed.callbacks.XC_LoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
@@ -531,14 +534,31 @@ public class Others extends Feature {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 var menu = (Menu) param.args[0];
                 var activity = (Activity) param.thisObject;
-                var itemMenu = menu.add(0, 0, 9999, " " + activity.getString(ResId.string.app_name));
+                var itemMenu = menu.add(0, 0, 6, "Go to the first message");
                 var iconDraw = DesignUtils.getDrawableByName("ic_settings");
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    Intent intent = activity.getPackageManager().getLaunchIntentForPackage(BuildConfig.APPLICATION_ID);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    activity.startActivity(intent);
+                    XposedHelpers.findAndHookMethod(
+                        "com.whatsapp.conversation.ConversationListView",
+                        lpparam.classLoader,
+                        "smoothScrollToPosition",
+                        int.class, int.class,
+                        new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                // Param 0: posisi
+                                // Param 1: offset
+                                int position = 0; // Posisi awal daftar
+                                int offset = 0;
+
+                                // Memanggil metode asli dengan parameter baru
+                                Object listView = param.thisObject;
+                                Method smoothScroll = listView.getClass().getDeclaredMethod("smoothScrollToPosition", int.class, int.class);
+                                smoothScroll.invoke(listView, position, offset);
+                            }
+                        }
+                    );
                     return true;
                 });
             }
