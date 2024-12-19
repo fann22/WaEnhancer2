@@ -534,31 +534,14 @@ public class Others extends Feature {
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 var menu = (Menu) param.args[0];
                 var activity = (Activity) param.thisObject;
-                var itemMenu = menu.add(0, 0, 6, "Go to the first message");
+                var itemMenu = menu.add(0, 0, 1, "Go to the first message");
                 var iconDraw = DesignUtils.getDrawableByName("ic_settings");
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    XposedHelpers.findAndHookMethod(
-                        "com.whatsapp.conversation.ConversationListView",
-                        classLoader,
-                        "smoothScrollToPosition",
-                        int.class, int.class,
-                        new XC_MethodHook() {
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                // Param 0: posisi
-                                // Param 1: offset
-                                int position = 0; // Posisi awal daftar
-                                int offset = 0;
-
-                                // Memanggil metode asli dengan parameter baru
-                                Object listView = param.thisObject;
-                                Method smoothScroll = listView.getClass().getDeclaredMethod("smoothScrollToPosition", int.class, int.class);
-                                smoothScroll.invoke(listView, position, offset);
-                            }
-                        }
-                    );
+                    Object listView = XposedHelpers.getObjectField(activity, "listView");
+                    Method scrollTo = listView.getClass().getDeclaredMethod("setSelection", int.class);
+                    scrollTo.invoke(listView, 0);
                     return true;
                 });
             }
