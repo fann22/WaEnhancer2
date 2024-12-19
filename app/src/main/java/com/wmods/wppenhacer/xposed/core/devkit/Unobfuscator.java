@@ -1776,11 +1776,12 @@ public class Unobfuscator {
                 )
             ).singleOrNull();
             if (classData != null) {
-            var targetClass = classData.getInstance(loader);
-            for (var method : targetClass.methods) {
-                if (method.getName().contains(fnStr)) {
-                    methodData = method;
-                    break;
+                var targetClass = classData.getInstance(loader);
+                for (var method : targetClass.methods) {
+                    if (method.getName().contains(fnStr)) {
+                        methodData = method;
+                        break;
+                    }
                 }
             }
             if (classData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
