@@ -551,8 +551,7 @@ public class Others extends Feature {
                         XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                logDebug(param.getResult().toString());
-                                return true;
+                                XposedBridge.log(param.getResult().toString());
                             }
                         });
                     });
