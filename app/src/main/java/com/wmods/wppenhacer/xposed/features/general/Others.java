@@ -544,32 +544,18 @@ public class Others extends Feature {
                 var activity = (Activity) param.thisObject;
                 var itemMenu = menu.add(0, 0, 1, "Go to the first message");
                 var iconDraw = DesignUtils.getDrawableByName("ic_settings");
-                iconDraw.setTint(0xff8696a0);
-                itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    try {
-                    var getViewConversationMethod = UnobfuscatorCache.getInstance().getMethod(classLoader, () -> {
-                        var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
-                        var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
-                        if (method == null) throw new RuntimeException("GetViewConversation method not found");
-                        return method;
-                    });
-                    XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
+                    var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                    XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                             var view = (ViewGroup) param.getResult();
-                            if (view != null) {
-                                XposedBridge.log("ViewGroup Result: " + view.toString());
-                            } else {
-                                XposedBridge.log("ViewGroup is null!");
-                            }
+                            Xposed.log(view.toString());
+                            if (view == null) return;
                         }
                     });
-                    } catch (Exception e) {
-                        XposedBridge.log(e.getMessage());
-                    }
-                    return true; // Event ditangani
-                });
+                    return true;
+                }
             }
         });
     }
