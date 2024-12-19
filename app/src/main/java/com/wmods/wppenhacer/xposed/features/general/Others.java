@@ -555,7 +555,7 @@ public class Others extends Feature {
                         }
                     });
                     return true;
-                }
+                });
             }
         });
     }
