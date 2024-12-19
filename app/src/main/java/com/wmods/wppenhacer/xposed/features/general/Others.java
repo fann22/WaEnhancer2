@@ -540,21 +540,26 @@ public class Others extends Feature {
                 iconDraw.setTint(0xff8696a0);
                 itemMenu.setIcon(iconDraw);
                 itemMenu.setOnMenuItemClickListener(item -> {
-                    try {
-                        // Ambil listView dari activity
-                        Object listView = XposedHelpers.getObjectField(activity, "listView");
-                        if (listView != null) {
-                            // Cari metode setSelection dan panggil
-                            Method scrollTo = listView.getClass().getDeclaredMethod("setSelection", int.class);
-                            scrollTo.setAccessible(true);
-                            scrollTo.invoke(listView, 0);
-                            Log.d("LSPosed", "Scroll to top invoked successfully.");
-                        } else {
-                            Log.e("LSPosed", "ListView is null. Cannot scroll.");
+                    XposedHelpers.findAndHookMethod(
+                    "com.whatsapp.conversation.conversationrow.message.MessageDetailsActivity",
+                    classLoader,
+                    "onCreateOptionsMenu",
+                    Menu.class,
+                    new XC_MethodHook() {
+                        try {
+                            // Dapatkan field A02 yang merupakan ListView
+                            Object listView = XposedHelpers.getObjectField(activity, "A02");
+
+                            if (listView != null && listView instanceof ListView) {
+                                // Panggil metode setSelection untuk menggulir ke awal
+                                ((ListView) listView).setSelection(0);
+                            } else {
+                                Log.e("LSPosed", "ListView (A02) not found or is not of type ListView!");
+                            }
+                        } catch (Exception e) {
+                            Log.e("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
                         }
-                    } catch (Exception e) {
-                        Log.e("LSPosed", "Error while scrolling to top: " + e.getMessage(), e);
-                    }
+                    });
                     return true; // Event ditangani
                 });
             }
