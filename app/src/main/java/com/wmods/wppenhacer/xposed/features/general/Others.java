@@ -541,7 +541,7 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     XposedHelpers.findAndHookMethod(
                         "com.whatsapp.conversation.ConversationListView",
-                        lpparam.classLoader,
+                        classLoader,
                         "smoothScrollToPosition",
                         int.class, int.class,
                         new XC_MethodHook() {
