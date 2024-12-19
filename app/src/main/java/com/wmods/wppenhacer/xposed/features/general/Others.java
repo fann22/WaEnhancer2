@@ -549,7 +549,7 @@ public class Others extends Feature {
                         var clazz = XposedHelpers.findClass("com.whatsapp.conversation.ConversationListView", classLoader);
                         var method = Arrays.stream(clazz.getDeclaredMethods()).filter(m -> m.getParameterCount() == 3 && m.getReturnType().equals(View.class) && m.getParameterTypes()[1].equals(LayoutInflater.class)).findFirst().orElse(null);
                         if (method == null) throw new RuntimeException("GetViewConversation method not found");
-                        XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
+                        return XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 var view = (ViewGroup) param.getResult();
