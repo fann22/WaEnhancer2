@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
 import android.view.View;
+import android.view.ViewGroup
 import android.util.Log;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -551,7 +552,8 @@ public class Others extends Feature {
                         XposedBridge.hookMethod(getViewConversationMethod, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                XposedBridge.log(param.getResult().toString());
+                                var view = (ViewGroup) param.getResult();
+                                XposedBridge.log(view.toString());
                             }
                         });
                     });
