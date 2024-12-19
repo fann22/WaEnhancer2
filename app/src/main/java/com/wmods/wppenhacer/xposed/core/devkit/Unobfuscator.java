@@ -1766,3 +1766,25 @@ public class Unobfuscator {
         });
     }
 }
+
+    public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
+        return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
+            String fnStr = "View must be inflated in ViewStubHolder.getView(";
+            Method methodData = null;
+            var classData = dexkit.findClass(
+                FindClass.create().matcher(
+                    ClassMatcher.create().addUsingString(fnStr)
+                )
+            ).singleOrNull();
+            if (classData != null) {
+            var targetClass = classData.getInstance(loader);
+            for (var method : targetClass.methods) {
+                if (method.getName().contains(fnStr)) {
+                    methodData = method;
+                    break;
+                }
+            }
+            if (classData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
+            return methodData;
+        });
+    }
