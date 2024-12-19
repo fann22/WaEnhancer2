@@ -1765,7 +1765,6 @@ public class Unobfuscator {
             return methodData.get(0).getMethodInstance(classLoader);
         });
     }
-}
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
@@ -1788,3 +1787,4 @@ public class Unobfuscator {
             return methodData;
         });
     }
+}
