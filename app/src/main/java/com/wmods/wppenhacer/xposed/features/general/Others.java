@@ -551,7 +551,7 @@ public class Others extends Feature {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 Object view = param.getResult();
-                                XposedBridge.log(view.toString() + ", Type: " + result.getClass().getName());
+                                XposedBridge.log(view.toString() + ", Type: " + view.getClass().getName());
                                 if (view == null) return;
                             }
                         });
