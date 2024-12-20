@@ -548,20 +548,21 @@ public class Others extends Feature {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
                         var loadConversationListVieww = Unobfuscator.loadConversationListView(classLoader);
                         for (var loadConversationListView : loadConversationListVieww) {
-                        //data.setAccessible(true);
-                        //XposedBridge.log(data.getDescriptor().toString());
-                        XposedBridge.log("Found: " + loadConversationListView.toString());
-                        XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                try {
-                                    Object view = param.getResult();
-                                    XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
-                                } catch (Exception e) {
-                                    XposedBridge.log(e.getMessage());
+                            //data.setAccessible(true);
+                            //XposedBridge.log(data.getDescriptor().toString());
+                            XposedBridge.log("Found: " + loadConversationListView.toString());
+                            XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    try {
+                                        Object view = param.getResult();
+                                        XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
+                                    } catch (Exception e) {
+                                        XposedBridge.log(e.getMessage());
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
                     }
