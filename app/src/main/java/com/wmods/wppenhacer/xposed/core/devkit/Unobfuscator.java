@@ -20,7 +20,7 @@ import com.wmods.wppenhacer.xposed.utils.Utils;
 import org.luckypray.dexkit.DexKitBridge;
 import org.luckypray.dexkit.query.FindClass;
 import org.luckypray.dexkit.query.FindMethod;
-import org.luckypray.dexkit.query.UsingFieldMatherList;
+import org.luckypray.dexkit.query.UsingFieldMatcherList;
 import org.luckypray.dexkit.query.enums.StringMatchType;
 import org.luckypray.dexkit.query.matchers.ClassMatcher;
 import org.luckypray.dexkit.query.matchers.MethodMatcher;
