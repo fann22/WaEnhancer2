@@ -546,13 +546,13 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
-                        var methodList = Unobfuscator.loadConversationListView(classLoader);
-                        XposedBridge.log(methodList.toString);/*
-                        for (var method : methodList) {
+                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                        //XposedBridge.log(methodList.toString);
+                        //for (var method : methodList) {
                             //data.setAccessible(true);
                             //XposedBridge.log(data.getDescriptor().toString());
-                            XposedBridge.log("Found: " + method.toString());
-                            XposedBridge.hookMethod(method, new XC_MethodHook() {
+                            XposedBridge.log("Found: " + loadConversationListView.toString());
+                            XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                                 @Override
                                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                     try {
@@ -563,7 +563,7 @@ public class Others extends Feature {
                                     }
                                 }
                             });
-                        }*/
+                    //}
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
                     }
