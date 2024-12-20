@@ -545,7 +545,7 @@ public class Others extends Feature {
                 var itemMenu = menu.add(0, 0, 1, "Go to the first message");
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
-                        Toast.makeText(this, "Clicked", 0).show();
+                        Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
                         XposedBridge.log(loadConversationListView.toString());
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
