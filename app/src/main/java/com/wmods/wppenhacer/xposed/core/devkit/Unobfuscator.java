@@ -1772,10 +1772,18 @@ public class Unobfuscator {
                     ClassMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
             ));
             var targetClass = classData.getInstance(loader);
-            var field = targetClass.getDeclaredField("A0H");*/
+            var field = targetClass.getDeclaredField("A0H");
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
                     MethodMatcher.create().addUsingString("ConversationsFragment_onCreateView")
-            ));
+            ));*/
+            var methodData = dexkit.findMethod(
+    FindMethod.create().matcher(
+        MethodMatcher.create()
+            .addReturnType("android/view/ViewGroup") // Mencocokkan return type
+            .addUsingField("androidx/recyclerview/widget/RecyclerView") // Mencocokkan penggunaan RecyclerView
+            .addParamCount(0)
+    )
+);
             // XposedBridge.log(methodData.toString());
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
