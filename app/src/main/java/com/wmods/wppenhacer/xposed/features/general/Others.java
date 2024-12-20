@@ -550,18 +550,25 @@ public class Others extends Feature {
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                Object view = param.getResult();
-                                if (view instanceof ViewGroup) {
-                                    ViewGroup viewGroup = (ViewGroup) view;
-                                    for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                                        View child = viewGroup.getChildAt(i);
-                                        if (child.canScrollVertically(-1)) { // Memeriksa apakah bisa scroll ke atas
-                                            child.scrollTo(0, 0); // Scroll ke atas
-                                            break;
+                                try {
+                                    Object view = param.getResult();
+                                    if (view != null) {
+                                        XposedBridge.log("View type: " + view.getClass().getName());
+                                        if (view instanceof ScrollView) {
+                                            ((ScrollView) view).fullScroll(View.FOCUS_UP);
+                                        } else if (view instanceof RecyclerView) {
+                                            ((RecyclerView) view).scrollToPosition(0);
+                                        } else if (view instanceof ListView) {
+                                            ((ListView) view).setSelection(0);
+                                        } else {
+                                            XposedBridge.log("Unhandled view type");
                                         }
+                                    } else {
+                                        XposedBridge.log("View is null");
                                     }
+                                } catch (Exception e) {
+                                    XposedBridge.log(e.getMessage());
                                 }
-                                
                             }
                         });
                     } catch (Exception e) {
