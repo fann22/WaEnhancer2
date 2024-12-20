@@ -546,7 +546,10 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
-                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                        var loadConversationListVieww = Unobfuscator.loadConversationListView(classLoader);
+                        for (var loadConversationListView : loadConversationListVieww) {
+                        //data.setAccessible(true);
+                        //XposedBridge.log(data.getDescriptor().toString());
                         XposedBridge.log("Found: " + loadConversationListView.toString());
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                             @Override
