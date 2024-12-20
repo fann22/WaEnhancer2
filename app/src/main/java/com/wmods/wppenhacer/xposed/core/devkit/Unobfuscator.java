@@ -1768,9 +1768,18 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            var methodData = dexkit.findMethod(FindMethod.create().matcher(
-                    MethodMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
+            var classData = dexkit.findClass(FindClass.create().matcher(
+                    ClassMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
             ));
+            var targetClass = classData.getInstance(loader);
+            var field = targetClass.getDeclaredField("A0H");
+            methodData = clazzData.findMethod(
+                new FindMethod().matcher(
+                    new MethodMatcher()
+                    .addUsingField(DexSignUtil.getFieldDescriptor(field))
+                    .returnType(ViewGroup.class)
+                )
+            );
             XposedBridge.log(methodData.toString());
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
