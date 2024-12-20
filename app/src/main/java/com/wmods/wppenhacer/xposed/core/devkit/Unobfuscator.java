@@ -1789,7 +1789,7 @@ public class Unobfuscator {
                     var class_ = XposedHelpers.findClass(dataStr, loader);
                     var classData = dexkit.getClassData(class_);
                     var field = class_.getDeclaredField("A00");
-                    methodData = classData.findMethod(
+                    var methodData_ = classData.findMethod(
                         new FindMethod().matcher(
                             new MethodMatcher()
                             .addUsingField(DexSignUtil.getFieldDescriptor(field))
@@ -1798,7 +1798,10 @@ public class Unobfuscator {
                             .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
                         )
                     );
-                    XposedBridge.log(methodData.toString());
+                    if (!methodData.isEmpty()) {
+                        methodData = methodData_;
+                        XposedBridge.log(methodData.toString());
+                    }
                 } catch (Exception e) {}
             }
             if (methodData == null) throw new RuntimeException("ConversationListView method not found");
