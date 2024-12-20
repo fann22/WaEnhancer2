@@ -1770,7 +1770,7 @@ public class Unobfuscator {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
             var classData = dexkit.findClass(FindClass.create().matcher(
                     ClassMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
-            ));
+            )).singleOrNull();
             var targetClass = classData.getInstance(loader);
             var field = targetClass.getDeclaredField("A0H");
             methodData = classData.findMethod(
