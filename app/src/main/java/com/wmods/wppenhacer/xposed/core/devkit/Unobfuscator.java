@@ -1781,7 +1781,7 @@ public class Unobfuscator {
         MethodMatcher.create()
             .returnType("android/view/ViewGroup") // Mencocokkan return type
             .addUsingField("androidx/recyclerview/widget/RecyclerView") // Mencocokkan penggunaan RecyclerView
-            .addParamCount(0)
+            .paramCount(0)
     )
 );
             // XposedBridge.log(methodData.toString());
