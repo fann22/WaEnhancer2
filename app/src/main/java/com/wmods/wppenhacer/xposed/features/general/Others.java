@@ -547,7 +547,7 @@ public class Others extends Feature {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
-                        XposedBridge.log(loadConversationListView.toString());
+                        XposedBridge.log("Found: " + loadConversationListView.toString());
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
