@@ -1768,30 +1768,11 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            String fnStr = "View must be inflated in ViewStubHolder.getView()";/*
-            Method methodData = null;
-            var classData = dexkit.findClass(
-                FindClass.create().matcher(
-                    ClassMatcher.create().addUsingString(fnStr)
-                )
-            ).singleOrNull();
-            if (classData != null) {
-            // Mendapatkan instance kelas dari ClassLoader
-            var targetClass = Class.forName(classData.getName(), false, loader);
-
-            // Iterasi melalui semua metode dalam kelas target
-            for (Method method : targetClass.getDeclaredMethods()) {
-                if (method.toString().contains(fnStr)) {
-                    methodData = method;
-                    break;
-                }
-            }
-            }*/
+            String fnStr = "View must be inflated in ViewStubHolder.getView()";
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
                     MethodMatcher.create().addUsingString(fnStr)
             ));
-            if (/*classData == null || */methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
-            XposedBridge.log(methodData.toString());
+            if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
         });
     }
