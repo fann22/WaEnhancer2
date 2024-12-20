@@ -1768,9 +1768,8 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            String fnStr = "View must be inflated in ViewStubHolder.getView()";
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
-                    MethodMatcher.create().addUsingString(fnStr)
+                    MethodMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback"
             ));
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
