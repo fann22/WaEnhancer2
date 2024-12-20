@@ -1768,7 +1768,7 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            String fnStr = "View must be inflated in ViewStubHolder.getView(";/*
+            String fnStr = "View must be inflated in ViewStubHolder.getView()";/*
             Method methodData = null;
             var classData = dexkit.findClass(
                 FindClass.create().matcher(
@@ -1788,7 +1788,7 @@ public class Unobfuscator {
             }
             }*/
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
-                    MethodMatcher.create().addUsingString(fnStr).returnType(View.class)
+                    MethodMatcher.create().addUsingString(fnStr)
             ));
             if (/*classData == null || */methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             XposedBridge.log(methodData.toString());
