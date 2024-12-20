@@ -1779,7 +1779,7 @@ public class Unobfuscator {
             var methodData = dexkit.findMethod(
     FindMethod.create().matcher(
         MethodMatcher.create()
-            .addReturnType("android/view/ViewGroup") // Mencocokkan return type
+            .returnType("android/view/ViewGroup") // Mencocokkan return type
             .addUsingField("androidx/recyclerview/widget/RecyclerView") // Mencocokkan penggunaan RecyclerView
             .addParamCount(0)
     )
