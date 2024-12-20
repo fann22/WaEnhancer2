@@ -1773,12 +1773,9 @@ public class Unobfuscator {
             ));
             var targetClass = classData.getInstance(loader);
             var field = targetClass.getDeclaredField("A0H");*/
-            var methodData = dexkit.findMethod(
-                new FindMethod.create().matcher(
-                    MethodMatcher()
-                    .addUsingString("Either viewStub or view should exist")
-                )
-            );
+            var methodData = dexkit.findMethod(FindMethod.create().matcher(
+                    MethodMatcher.create().addUsingString("Either viewStub or view should exist")
+            ));
             XposedBridge.log(methodData.toString());
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
