@@ -1782,7 +1782,7 @@ public class Unobfuscator {
                     //.addUsingField(DexSignUtil.getFieldDescriptor(field))
                     .returnType(ViewGroup.class) // Mencocokkan return type
                     .paramCount(0)
-                    .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-void")))
+                    .opCodes(new OpCodesMatcher().opNames(List.of("iget-object")))
                 )
             );
             XposedBridge.log(methodData.toString());
