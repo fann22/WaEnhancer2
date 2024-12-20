@@ -552,20 +552,7 @@ public class Others extends Feature {
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 try {
                                     Object view = param.getResult();
-                                    if (view != null) {
-                                        XposedBridge.log("View type: " + view.getClass().getName());
-                                        if (view instanceof ScrollView) {
-                                            ((ScrollView) view).fullScroll(View.FOCUS_UP);
-                                        } else if (view instanceof RecyclerView) {
-                                            ((RecyclerView) view).scrollToPosition(0);
-                                        } else if (view instanceof ListView) {
-                                            ((ListView) view).setSelection(0);
-                                        } else {
-                                            XposedBridge.log("Unhandled view type");
-                                        }
-                                    } else {
-                                        XposedBridge.log("View is null");
-                                    }
+                                    XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
                                 } catch (Exception e) {
                                     XposedBridge.log(e.getMessage());
                                 }
