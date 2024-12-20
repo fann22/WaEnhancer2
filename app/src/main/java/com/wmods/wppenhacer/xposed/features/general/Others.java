@@ -547,6 +547,7 @@ public class Others extends Feature {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
                         var methodList = Unobfuscator.loadConversationListView(classLoader);
+                        XposedBridge.log(methodList.toString);/*
                         for (var method : methodList) {
                             //data.setAccessible(true);
                             //XposedBridge.log(data.getDescriptor().toString());
@@ -562,7 +563,7 @@ public class Others extends Feature {
                                     }
                                 }
                             });
-                        }
+                        }*/
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
                     }
