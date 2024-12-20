@@ -1773,11 +1773,10 @@ public class Unobfuscator {
             ));
             var targetClass = classData.getInstance(loader);
             var field = targetClass.getDeclaredField("A0H");
-            methodData = clazzData.findMethod(
+            methodData = classData.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
                     .addUsingField(DexSignUtil.getFieldDescriptor(field))
-                    .returnType(ViewGroup.class)
                 )
             );
             XposedBridge.log(methodData.toString());
