@@ -1768,22 +1768,37 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            var methodData = dexkit.findMethod(
+            var methodData = null;
+            var methodDataList = dexkit.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
                     .returnType(ViewGroup.class)
                     .paramCount(0)
-                    //.opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
-                    // .usingFields(UsingFieldMatcherList().add(UsingFieldMatcher().matcher(FieldMatcher().name("A00"))))
                 )
             );
-            if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
-            /*for (var data : methodData) {
-                //data.setAccessible(true);
-                XposedBridge.log(data.getDescriptor().toString());
-            }*/
-            //return methodData.get(0).getMethodInstance(loader);
-            return methodData;
+            if (methodDataList.isEmpty()) throw new RuntimeException("ConversationListView method not found");
+            for (var data : methodDataList) {
+                String[] parts = data.getDescriptor().toString().split("->");
+                String classPart = parts[0];
+                if (classPart.startsWith("L") && classPart.endsWith(";")) {
+                    classPart = classPart.substring(1, classPart.length() - 1);
+                }
+                var dataStr = classPart.replace('/', '.');
+
+                var classData = dexkit.getClassData(XposedHelpers.findClass(dataStr, loader));
+                var field = claasData.getDeclaredField("A00");
+                methodData = classData.findMethod(
+                    new FindMethod().matcher(
+                        new MethodMatcher()
+                        .addUsingField(DexSignUtil.getFieldDescriptor(field))
+                        .returnType(ViewGroup.class)
+                        .paramCount(0)
+                    )
+                );
+                XposedBridge.log(methodData.toString());
+            }
+            return methodData.get(0).getMethodInstance(loader);
+            //return methodData;
         });
     }
 }
