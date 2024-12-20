@@ -546,14 +546,16 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
-                        var methodList = Unobfuscator.loadConversationListView(classLoader);
-                        for (var method : methodList) {
+                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                        //XposedBridge.log(methodList.toString);
+                        //for (var method : methodList) {
                             //data.setAccessible(true);
                             //XposedBridge.log(data.getDescriptor().toString());
-                            XposedBridge.log("Found: " + method.toString());
-                            XposedBridge.hookMethod(method, new XC_MethodHook() {
+                            XposedBridge.log("Found: " + loadConversationListView.toString());
+                            XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
+                                XposedBridge.log("Hooking...");
                                 @Override
-                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                                     try {
                                         Object view = param.getResult();
                                         XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
@@ -573,33 +575,10 @@ public class Others extends Feature {
                                     }
                                 }
                             });
-                        }
-                    } catch (Exception e) {
-                        XposedBridge.log(e.getMessage());
-                    }
-                    /*try {
-                        Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
-                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
-                        //XposedBridge.log(methodList.toString);
-                        //for (var method : methodList) {
-                            //data.setAccessible(true);
-                            //XposedBridge.log(data.getDescriptor().toString());
-                            XposedBridge.log("Found: " + loadConversationListView.toString());
-                            XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
-                                @Override
-                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                                    try {
-                                        Object view = param.getResult();
-                                        XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
-                                    } catch (Exception e) {
-                                        XposedBridge.log(e.getMessage());
-                                    }
-                                }
-                            });
                     //}
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
-                    }*/
+                    }
                     return true;
                 });
             }
