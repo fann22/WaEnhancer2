@@ -1806,6 +1806,6 @@ public class Unobfuscator {
             if (methodData == null) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
             //return methodData;
-        });
-    }*/
+        });*/
+    }
 }
