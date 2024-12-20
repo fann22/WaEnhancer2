@@ -547,6 +547,7 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
+                        XposedBridge.log(loadConversationListView.toString());
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
