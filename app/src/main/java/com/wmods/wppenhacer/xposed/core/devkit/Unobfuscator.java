@@ -1798,7 +1798,7 @@ public class Unobfuscator {
                             .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
                         )
                     );
-                    if (methodData.isEmpty()) return;
+                    if (methodData.isEmpty()) continue;
                     methodData = methodData_;
                     XposedBridge.log(methodData.toString());
                 } catch (Exception e) {}
