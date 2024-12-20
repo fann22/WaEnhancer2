@@ -1780,7 +1780,7 @@ public class Unobfuscator {
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             for (var data : methodData) {
                 //data.setAccessible(true);
-                XposedBridge.log(data.toString());
+                XposedBridge.log(data.getDescriptor().toString());
             }
             return methodData.get(0).getMethodInstance(loader);
         });
