@@ -1766,7 +1766,7 @@ public class Unobfuscator {
         });
     }
 
-    public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
+    public synchronized static MethodDataList loadConversationListView(ClassLoader loader) throws Exception {
         /*return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
             MethodDataList methodData = null;*/
             /*var methodDataList =*/ return dexkit.findMethod(
