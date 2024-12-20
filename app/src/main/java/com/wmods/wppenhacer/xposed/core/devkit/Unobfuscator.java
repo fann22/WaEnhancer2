@@ -1777,14 +1777,15 @@ public class Unobfuscator {
                     MethodMatcher.create().addUsingString("ConversationsFragment_onCreateView")
             ));*/
             var methodData = dexkit.findMethod(
-    FindMethod.create().matcher(
-        MethodMatcher.create()
-            .returnType(ViewGroup.class) // Mencocokkan return type
-            .addUsingField("androidx/recyclerview/widget/RecyclerView") // Mencocokkan penggunaan RecyclerView
-            .paramCount(0)
-    )
-);
-            // XposedBridge.log(methodData.toString());
+                new FindMethod().matcher(
+                    new MethodMatcher()
+                    .addUsingField(DexSignUtil.getFieldDescriptor(field))
+                    .returnType(ViewGroup.class) // Mencocokkan return type
+                    .paramCount(0)
+                    .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-void")))
+                )
+            );
+            XposedBridge.log(methodData.toString());
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
         });
