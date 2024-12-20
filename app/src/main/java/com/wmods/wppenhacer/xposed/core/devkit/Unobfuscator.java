@@ -1777,29 +1777,10 @@ public class Unobfuscator {
                     // .usingFields(UsingFieldMatcherList().add(UsingFieldMatcher().matcher(FieldMatcher().name("A00"))))
                 )
             );
-            XposedBridge.log(methodData.toString());
-List<Method> methods = dexkit.findMethod(
-    new FindMethod().matcher(
-        new MethodMatcher()
-            .returnType(ViewGroup.class)
-            .paramCount(0)
-    )
-);
-
-// Log setiap metode yang ditemukan
-for (Method method : methods) {
-    // Log informasi dasar tentang metode
-    XposedBridge.log("Method found: " + method.getDeclaringClass().getName() + "." + method.getName() + "()");
-    
-    // Jika Anda ingin mencatat parameter atau return type, tambahkan:
-    XposedBridge.log("Return type: " + method.getReturnType().getName());
-    XposedBridge.log("Parameter count: " + method.getParameterCount());
-    Class<?>[] params = method.getParameterTypes();
-    for (int i = 0; i < params.length; i++) {
-        XposedBridge.log("Param " + i + ": " + params[i].getName());
-    }
-}
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
+            for (var data : methodData) {
+                XposedBridge.log(data.toString());
+            }
             return methodData.get(0).getMethodInstance(loader);
         });
     }
