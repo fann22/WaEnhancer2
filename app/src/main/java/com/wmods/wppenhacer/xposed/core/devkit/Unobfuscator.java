@@ -1776,7 +1776,7 @@ public class Unobfuscator {
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
                     MethodMatcher.create().addUsingString("ConversationsFragment_onCreateView")
             ));
-            XposedBridge.log(methodData.toString());
+            // XposedBridge.log(methodData.toString());
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
         });
