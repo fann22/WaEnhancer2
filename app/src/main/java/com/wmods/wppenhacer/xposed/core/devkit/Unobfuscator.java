@@ -1767,22 +1767,14 @@ public class Unobfuscator {
     }
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
-        return UnobfuscatorCache.getInstance().getMethod(loader, () -> {/*
-            var classData = dexkit.findClass(FindClass.create().matcher(
-                    ClassMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
-            ));
-            var targetClass = classData.getInstance(loader);
-            var field = targetClass.getDeclaredField("A0H");
-            var methodData = dexkit.findMethod(FindMethod.create().matcher(
-                    MethodMatcher.create().addUsingString("ConversationsFragment_onCreateView")
-            ));*/
+        return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
             var methodData = dexkit.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
-                    //.addUsingField(DexSignUtil.getFieldDescriptor(field))
-                    .returnType(ViewGroup.class) // Mencocokkan return type
+                    .returnType(ViewGroup.class)
                     .paramCount(0)
-                    .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
+                    //.opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
+                    .usingFields(UsingFieldMatcherList().add(UsingFieldMatcher().matcher(FieldMatcher().name("A00"))))
                 )
             );
             XposedBridge.log(methodData.toString());
