@@ -546,6 +546,39 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
+                        var methodList = Unobfuscator.loadConversationListView(classLoader);
+                        for (var method : methodList) {
+                            //data.setAccessible(true);
+                            //XposedBridge.log(data.getDescriptor().toString());
+                            XposedBridge.log("Found: " + method.toString());
+                            XposedBridge.hookMethod(method, new XC_MethodHook() {
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                    try {
+                                        Object view = param.getResult();
+                                        XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
+                                        if (view instanceof ViewGroup) {
+                                            ViewGroup viewGroup = (ViewGroup) view;
+                            
+                                            if (viewGroup instanceof ScrollView) {
+                                                ((ScrollView) viewGroup).scrollTo(0, 0); // Scroll ke atas
+                                            } else if (viewGroup instanceof RecyclerView) {
+                                                ((RecyclerView) viewGroup).scrollToPosition(0); // Scroll ke posisi pertama
+                                            } else {
+                                                XposedBridge.log("Unsupported ViewGroup type");
+                                            }
+                                        }
+                                    } catch (Exception e) {
+                                        XposedBridge.log(e.getMessage());
+                                    }
+                                }
+                            });
+                        }
+                    } catch (Exception e) {
+                        XposedBridge.log(e.getMessage());
+                    }
+                    /*try {
+                        Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
                         //XposedBridge.log(methodList.toString);
                         //for (var method : methodList) {
@@ -566,7 +599,7 @@ public class Others extends Feature {
                     //}
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
-                    }
+                    }*/
                     return true;
                 });
             }
