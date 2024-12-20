@@ -1768,7 +1768,7 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            var methodData = dexkit.findMethod(
+            return dexkit.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
                     .returnType(ViewGroup.class)
@@ -1776,14 +1776,14 @@ public class Unobfuscator {
                     //.opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
                     // .usingFields(UsingFieldMatcherList().add(UsingFieldMatcher().matcher(FieldMatcher().name("A00"))))
                 )
-            );
+            );/*
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             /*for (var data : methodData) {
                 //data.setAccessible(true);
                 XposedBridge.log(data.getDescriptor().toString());
             }*/
             //return methodData.get(0).getMethodInstance(loader);
-            return methodData;
+            //return methodData;
         });
     }
 }
