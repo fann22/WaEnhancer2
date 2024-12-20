@@ -1779,7 +1779,7 @@ public class Unobfuscator {
             var methodData = dexkit.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
-                    .addUsingField(DexSignUtil.getFieldDescriptor(field))
+                    //.addUsingField(DexSignUtil.getFieldDescriptor(field))
                     .returnType(ViewGroup.class) // Mencocokkan return type
                     .paramCount(0)
                     .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-void")))
