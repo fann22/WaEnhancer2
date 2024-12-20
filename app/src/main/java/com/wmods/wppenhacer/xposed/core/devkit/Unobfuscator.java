@@ -1769,7 +1769,7 @@ public class Unobfuscator {
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
             var methodData = dexkit.findMethod(FindMethod.create().matcher(
-                    MethodMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback"
+                    MethodMatcher.create().addUsingString("Callback must be disconnected before connecting a different callback")
             ));
             if (methodData.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
