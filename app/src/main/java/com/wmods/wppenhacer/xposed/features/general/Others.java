@@ -543,9 +543,9 @@ public class Others extends Feature {
                 var menu = (Menu) param.args[0];
                 var activity = (Activity) param.thisObject;
                 var itemMenu = menu.add(0, 0, 1, "Go to the first message");
-                var iconDraw = DesignUtils.getDrawableByName("ic_settings");
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
+                        Toast.makeText(this, "Clicked", 0).show();
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
                         XposedBridge.log(loadConversationListView.toString());
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
