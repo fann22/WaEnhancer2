@@ -1795,6 +1795,7 @@ public class Unobfuscator {
                             .addUsingField(DexSignUtil.getFieldDescriptor(field))
                             .returnType(ViewGroup.class)
                             .paramCount(0)
+                            .opCodes(new OpCodesMatcher().opNames(List.of("iget-object", "return-object")))
                         )
                     );
                     XposedBridge.log(methodData.toString());
