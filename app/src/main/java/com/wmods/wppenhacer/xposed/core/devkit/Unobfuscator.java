@@ -1778,26 +1778,29 @@ public class Unobfuscator {
             );
             if (methodDataList.isEmpty()) throw new RuntimeException("ConversationListView method not found");
             for (var data : methodDataList) {
-                String[] parts = data.getDescriptor().toString().split("->");
-                String classPart = parts[0];
-                if (classPart.startsWith("L") && classPart.endsWith(";")) {
-                    classPart = classPart.substring(1, classPart.length() - 1);
-                }
-                var dataStr = classPart.replace('/', '.');
+                try {
+                    String[] parts = data.getDescriptor().toString().split("->");
+                    String classPart = parts[0];
+                    if (classPart.startsWith("L") && classPart.endsWith(";")) {
+                        classPart = classPart.substring(1, classPart.length() - 1);
+                    }
+                    var dataStr = classPart.replace('/', '.');
 
-                var class_ = XposedHelpers.findClass(dataStr, loader);
-                var classData = dexkit.getClassData(class_);
-                var field = class_.getDeclaredField("A00");
-                methodData = classData.findMethod(
-                    new FindMethod().matcher(
-                        new MethodMatcher()
-                        .addUsingField(DexSignUtil.getFieldDescriptor(field))
-                        .returnType(ViewGroup.class)
-                        .paramCount(0)
-                    )
-                );
-                XposedBridge.log(methodData.toString());
+                    var class_ = XposedHelpers.findClass(dataStr, loader);
+                    var classData = dexkit.getClassData(class_);
+                    var field = class_.getDeclaredField("A00");
+                    methodData = classData.findMethod(
+                        new FindMethod().matcher(
+                            new MethodMatcher()
+                            .addUsingField(DexSignUtil.getFieldDescriptor(field))
+                            .returnType(ViewGroup.class)
+                            .paramCount(0)
+                        )
+                    );
+                    XposedBridge.log(methodData.toString());
+                } catch (Exception e) {}
             }
+            if (methodData == null) throw new RuntimeException("ConversationListView method not found");
             return methodData.get(0).getMethodInstance(loader);
             //return methodData;
         });
