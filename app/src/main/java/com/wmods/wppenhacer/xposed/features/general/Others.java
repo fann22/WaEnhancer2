@@ -547,16 +547,14 @@ public class Others extends Feature {
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
-                        XposedBridge.log(loadConversationListView.toString());
-                        /*
                         XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                var view = (ViewGroup) param.getResult();
-                                XposedBridge.log(view.toString());
+                                Object view = param.getResult();
+                                XposedBridge.log(view.toString() + ", Type: " + result.getClass().getName());
                                 if (view == null) return;
                             }
-                        });*/
+                        });
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
                     }
