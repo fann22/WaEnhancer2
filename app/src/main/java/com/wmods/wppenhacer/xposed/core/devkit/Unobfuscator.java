@@ -1773,7 +1773,7 @@ public class Unobfuscator {
             )).singleOrNull();
             var targetClass = classData.getInstance(loader);
             var field = targetClass.getDeclaredField("A0H");
-            methodData = classData.findMethod(
+            var methodData = classData.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
                     .addUsingField(DexSignUtil.getFieldDescriptor(field))
