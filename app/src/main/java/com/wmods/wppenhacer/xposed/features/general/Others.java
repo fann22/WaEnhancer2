@@ -12,11 +12,11 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.Activity;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ScrollView;
+import androidx.recyclerview.widget.RecyclerView;
+import android.widget.ListView;
 import android.util.Log;
 import android.os.Bundle;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 
