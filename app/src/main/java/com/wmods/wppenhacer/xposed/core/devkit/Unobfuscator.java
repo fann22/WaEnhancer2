@@ -1768,7 +1768,7 @@ public class Unobfuscator {
 
     public synchronized static Method loadConversationListView(ClassLoader loader) throws Exception {
         return UnobfuscatorCache.getInstance().getMethod(loader, () -> {
-            MethodDataList methodData dexkit.findMethod(
+            var methodData = dexkit.findMethod(
                 new FindMethod().matcher(
                     new MethodMatcher()
                     .returnType(ViewGroup.class)
