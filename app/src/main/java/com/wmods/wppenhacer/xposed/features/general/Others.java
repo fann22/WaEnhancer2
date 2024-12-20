@@ -551,8 +551,17 @@ public class Others extends Feature {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                 Object view = param.getResult();
-                                XposedBridge.log(view.toString() + ", Type: " + view.getClass().getName());
-                                if (view == null) return;
+                                if (view instanceof ViewGroup) {
+                                    ViewGroup viewGroup = (ViewGroup) view;
+                                    for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                                        View child = viewGroup.getChildAt(i);
+                                        if (child.canScrollVertically(-1)) { // Memeriksa apakah bisa scroll ke atas
+                                            child.scrollTo(0, 0); // Scroll ke atas
+                                            break;
+                                        }
+                                    }
+                                }
+                                
                             }
                         });
                     } catch (Exception e) {
