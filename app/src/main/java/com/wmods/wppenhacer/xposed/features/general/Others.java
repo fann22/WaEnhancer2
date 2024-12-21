@@ -553,9 +553,12 @@ public class Others extends Feature {
                             //XposedBridge.log(data.getDescriptor().toString());
                             XposedBridge.log("Found: " + loadConversationListView.toString());
                             XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
-                                XposedBridge.log("Hooking...");
                                 @Override
-                                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                                protected void beforeHookedMethod(MethodHookParam param) {
+                                    XposedBridge.log("Hooking...");
+                                }
+                                @Override
+                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                                     try {
                                         Object view = param.getResult();
                                         XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
