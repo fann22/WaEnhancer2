@@ -537,48 +537,44 @@ public class Others extends Feature {
                 }
             }
         });
-        XposedHelpers.findAndHookMethod("com.whatsapp.Conversation", classLoader, "onCreateOptionsMenu", Menu.class, new XC_MethodHook() {
+        XposedHelpers.findAndHookMethod("com.whatsapp.Conversation", classLoader, "onPrepareOptionsMenu", Menu.class, new XC_MethodHook() {
             @Override
             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                 var menu = (Menu) param.args[0];
                 var activity = (Activity) param.thisObject;
                 var itemMenu = menu.add(0, 0, 1, "Go to the first message");
+                var iconDraw = DesignUtils.getDrawableByName("ic_settings");
                 itemMenu.setOnMenuItemClickListener(item -> {
                     try {
                         Utils.showToast("Clicked!", Toast.LENGTH_SHORT);
-                        var loadConversationListView = Unobfuscator.loadConversationListView(classLoader);
-                        //XposedBridge.log(methodList.toString);
-                        //for (var method : methodList) {
-                            //data.setAccessible(true);
-                            //XposedBridge.log(data.getDescriptor().toString());
-                            XposedBridge.log("Found: " + loadConversationListView.toString());
-                            XposedBridge.hookMethod(loadConversationListView, new XC_MethodHook() {
-                                @Override
-                                protected void beforeHookedMethod(MethodHookParam param) {
-                                    XposedBridge.log("Hooking...");
-                                }
-                                @Override
-                                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                    try {
-                                        Object view = param.getResult();
-                                        XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
-                                        if (view instanceof ViewGroup) {
-                                            ViewGroup viewGroup = (ViewGroup) view;
-                            
-                                            if (viewGroup instanceof ScrollView) {
-                                                ((ScrollView) viewGroup).scrollTo(0, 0); // Scroll ke atas
-                                            } else if (viewGroup instanceof RecyclerView) {
-                                                ((RecyclerView) viewGroup).scrollToPosition(0); // Scroll ke posisi pertama
-                                            } else {
-                                                XposedBridge.log("Unsupported ViewGroup type");
-                                            }
+                        var method = Unobfuscator.loadConversationListView(classLoader);
+                        XposedBridge.log("Found: " + method.toString());
+
+                        String regex = "(\\S+)\\s+(\\S+)\\.(\\S+)\\(\\)";
+                        java.util.regex.Pattern pattern = java.util.regex.Pattern.compile(regex);
+                        java.util.regex.Matcher matcher = pattern.matcher(method.toString());
+                        
+                        if (matcher.find()) {
+                            String className = matcher.group(2);
+                            String methodName = matcher.group(3);
+                            XposedHelpers.findAndHookMethod(className, classLoader, methodName, new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                Object view = param.getResult();
+                                XposedBridge.log(view.toString() + ", View type: " + view.getClass().getName());
+                                if (view instanceof ViewGroup) {
+                                    ViewGroup viewGroup = (ViewGroup) view;
+                                    if (viewGroup instanceof ScrollView) {
+                                            ((ScrollView) viewGroup).scrollTo(0, 0);
+                                        } else if (viewGroup instanceof RecyclerView) {
+                                            ((RecyclerView) viewGroup).scrollToPosition(0);
+                                        } else {
+                                            XposedBridge.log("Unsupported ViewGroup type");
                                         }
-                                    } catch (Exception e) {
-                                        XposedBridge.log(e.getMessage());
                                     }
                                 }
                             });
-                    //}
+                        }
                     } catch (Exception e) {
                         XposedBridge.log(e.getMessage());
                     }
